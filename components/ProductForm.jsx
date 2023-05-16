@@ -20,12 +20,14 @@ const ProductForm = ({ product }) => {
       mota: product?.mota,
       giatien: product?.giatien,
       soluong: product?.soluong,
-      danhmuc: product?.danhmuc,
+      danhmuc: product?.danhmuc || 1,
     },
     onSubmit: async (values) => {
-      values.id = product.id;
       if (!product) await ProductAPI.createProduct(values);
-      else await ProductAPI.updateProduct(values);
+      else {
+        values.id = product.id;
+        await ProductAPI.updateProduct(values);
+      }
 
       Router.push("/products");
     },
@@ -68,11 +70,14 @@ const ProductForm = ({ product }) => {
 
       <select
         name="danhmuc"
-        defaultValue={product?.danhmuc}
+        defaultValue={product?.danhmuc || 1}
         id="danhmuc"
         onChange={(e) => {
           formik.setFieldValue("danhmuc", e.target.value);
         }}>
+        <option value="" disabled>
+          Uncategorized
+        </option>
         {category?.map((item, index) => (
           <option key={index} value={item.id}>
             {item.ten}
