@@ -40,12 +40,10 @@ const Nav = () => {
           Orders
         </Link>
         <Link
-          className={
-            pathname.includes("/categories") ? activeLink : inactiveLink
-          }
-          href={"/categories"}>
+          className={pathname.includes("/supplier") ? activeLink : inactiveLink}
+          href={"/supplier"}>
           <IconCategories />
-          Categories
+          Supplier
         </Link>
         <Link
           className={pathname.includes("/settings") ? activeLink : inactiveLink}

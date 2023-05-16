@@ -2,17 +2,16 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-import { fakeData } from "@/fakeData";
 import IconEdit from "@/components/icons/IconEdit";
 import IconTrash from "@/components/icons/IconTrash";
 import ProductAPI from "@/src/api/product";
-import { number } from "yup";
 
 const Products = () => {
   const [listProduct, setListProduct] = useState([]);
   const [pageNumber, setPageNumber] = useState([]);
   const [countPage, setCountPage] = useState();
   const [paging, setPaging] = useState(1);
+
   const fetchListProduct = async () => {
     const data = await ProductAPI.getListProduct({ page: paging });
     setCountPage(Math.floor(data.data.count / 10) + 1);
@@ -56,6 +55,8 @@ const Products = () => {
         <thead>
           <tr>
             <td>Product name</td>
+            <td>Product price</td>
+            <td>Product in stock</td>
             <td></td>
           </tr>
         </thead>
@@ -63,6 +64,8 @@ const Products = () => {
           {listProduct.map((data, index) => (
             <tr key={index}>
               <td>{data.ten}</td>
+              <td>{data.giatien} đ</td>
+              <td>{data.soluong}</td>
               <td className="flex flex-row">
                 <Link
                   className="bg-blue-900 text-white"

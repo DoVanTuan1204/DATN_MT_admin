@@ -16,25 +16,26 @@ const ProductForm = ({ product }) => {
 
   const formik = useFormik({
     initialValues: {
-      ten: product?.ten || "",
-      mota: product?.mota || "",
-      giatien: product?.giatien || "",
-      soluong: product?.soluong || "",
-      danhmuc: product?.danhmuc || "",
+      ten: product?.ten,
+      mota: product?.mota,
+      giatien: product?.giatien,
+      soluong: product?.soluong,
+      danhmuc: product?.danhmuc,
     },
     onSubmit: async (values) => {
-      if (product === undefined) await ProductAPI.createProduct(values);
+      values.id = product.id;
+      if (!product) await ProductAPI.createProduct(values);
       else await ProductAPI.updateProduct(values);
+
       Router.push("/products");
     },
   });
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <label>Product name</label>
       <input
         onChange={formik.handleChange}
-        value={product?.ten}
+        defaultValue={product?.ten}
         name="ten"
         type="text"
         placeholder="Product name"
@@ -42,7 +43,7 @@ const ProductForm = ({ product }) => {
       <label>Description</label>
       <textarea
         onChange={formik.handleChange}
-        value={product?.mota}
+        defaultValue={product?.mota}
         name="mota"
         type="text"
         placeholder="Description"
@@ -50,7 +51,7 @@ const ProductForm = ({ product }) => {
       <label>Price</label>
       <input
         onChange={formik.handleChange}
-        value={product?.giatien}
+        defaultValue={product?.giatien}
         name="giatien"
         type="text"
         placeholder="Price"
@@ -58,7 +59,7 @@ const ProductForm = ({ product }) => {
       <label>Quantity</label>
       <input
         onChange={formik.handleChange}
-        value={product?.soluong}
+        defaultValue={product?.soluong}
         name="soluong"
         type="text"
         placeholder="Price"
@@ -67,7 +68,7 @@ const ProductForm = ({ product }) => {
 
       <select
         name="danhmuc"
-        value={product?.danhmuc}
+        defaultValue={product?.danhmuc}
         id="danhmuc"
         onChange={(e) => {
           formik.setFieldValue("danhmuc", e.target.value);

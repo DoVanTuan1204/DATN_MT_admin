@@ -1,27 +1,39 @@
 import Layout from "@/components/Layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { fakeData } from "@/fakeDataOrder";
+import OrderAPI from "@/src/api/oder";
 
 const Orders = () => {
+  const [listOrder, setListOrder] = useState();
+
+  const fetchListOrder = async () => {
+    const data = await OrderAPI.getListOrder();
+    setListOrder(data.data.results);
+    console.log(data.data.results);
+  };
+  useEffect(() => {
+    fetchListOrder();
+  }, []);
+
   return (
     <Layout>
       <h1>Orders</h1>
       <table className="basic">
         <thead>
           <tr>
-            <td>Name</td>
+            <td>Phone Number</td>
             <td>Paid</td>
             <td>Date</td>
-            <td>Product</td>
+            <td>Address</td>
           </tr>
         </thead>
         <tbody>
-          {fakeData.map((data, index) => (
+          {listOrder?.map((data, index) => (
             <tr key={index}>
-              <td>{data.name}</td>
-              <td>{data.paid === false ? "No" : "Yes"}</td>
-              <td>{data.date}</td>
-              <td>{data.product}</td>
+              <td className="">{data.sdtgiaohang}</td>
+              <td className="">{data.thanhtien}</td>
+              <td className="">{data.ngaydat}</td>
+              <td className="">{data.diachidathang}</td>
             </tr>
           ))}
         </tbody>

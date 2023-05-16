@@ -20,7 +20,7 @@ const EditProduct = () => {
   return (
     <Layout>
       <h1 className="text-blue-900 text-xl">Add new product</h1>
-      <ProductForm product={detailProduct} />
+      {detailProduct && <ProductForm product={detailProduct} />}
     </Layout>
   );
 };
