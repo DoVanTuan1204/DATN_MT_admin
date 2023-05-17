@@ -1,9 +1,11 @@
 import CategoryAPI from "@/src/api/category";
+import { phoneRegExp } from "@/src/api/constant/regex";
 import ImagesAPI from "@/src/api/images";
 import ProductAPI from "@/src/api/product";
 import { useFormik } from "formik";
 import Router from "next/router";
 import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
 
 const ProductForm = ({ product }) => {
   const [category, setCategory] = useState([]);
@@ -23,9 +25,29 @@ const ProductForm = ({ product }) => {
       mota: product?.mota,
       giatien: product?.giatien,
       soluong: product?.soluong,
-      danhmuc: product?.danhmuc,
+      danhmuc: product?.danhmuc || 1,
     },
+    validationSchema: Yup.object({
+      ten: Yup.string()
+        .min(2, "Mininum 2 characters")
+        .max(15, "Maximum 15 characters")
+        .required("Required!"),
+      soluong: Yup.number().required("Required!"),
+      giatien: Yup.string()
+        .min(1, "Mininum 6 characters")
+        .required("Required!"),
+      mota: Yup.string()
+        .min(6, "Mininum 6 characters")
+        .max(50, "Maximum 50 characters")
+        .required("Required!"),
+      sdt: Yup.string()
+        .matches(phoneRegExp, "Phone number is not valid")
+        .min(6, "Mininum 6 characters")
+        .max(10, "Maximum 10 characters"),
+    }),
+
     onSubmit: async (values) => {
+      console.log(values);
       if (!product) await ProductAPI.createProduct(values);
       else {
         values.id = product.id;
@@ -35,14 +57,14 @@ const ProductForm = ({ product }) => {
     },
   });
   const uploadImages = async (ev) => {
-    const files = ev.target?.files;
-    if (files?.length > 0) {
-      const data = await ImagesAPI.createImages();
-      console.log(data);
-      // setImages((oldImages) => {
-      //   return [...oldImages, ...res.data.links];
-      // });
-    }
+    // const files = ev.target?.files;
+    // if (files?.length > 0) {
+    //   const data = await ImagesAPI.createImages();
+    //   console.log(data);
+    //   // setImages((oldImages) => {
+    //   //   return [...oldImages, ...res.data.links];
+    //   // });
+    // }
   };
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -51,10 +73,12 @@ const ProductForm = ({ product }) => {
         onChange={formik.handleChange}
         defaultValue={product?.ten}
         name="ten"
+        value={formik?.values?.ten}
         type="text"
         placeholder="Product name"
       />
-      <label>Description</label>
+      {formik.errors.ten && formik.touched.ten && <p>{formik.errors.ten}</p>}
+
       <div className="mb-2 flex flex-wrap gap-1">
         {!!images?.length &&
           images.map((link) => (
@@ -64,7 +88,6 @@ const ProductForm = ({ product }) => {
               <img src={link} alt="" className="rounded-lg" />
             </div>
           ))}
-        {/* {isUploading && <div className="h-24 flex items-center"></div>} */}
         <label className="w-24 h-24 cursor-pointer text-center flex flex-col items-center justify-center text-sm gap-1 text-primary rounded-sm bg-white shadow-sm border border-primary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -83,29 +106,43 @@ const ProductForm = ({ product }) => {
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
       </div>
+      <label>Description</label>
       <textarea
         onChange={formik.handleChange}
         defaultValue={product?.mota}
         name="mota"
+        value={formik?.values?.mota}
         type="text"
         placeholder="Description"
       />
+      {formik.errors.mota && formik.touched.mota && <p>{formik.errors.mota}</p>}
+
       <label>Price</label>
       <input
         onChange={formik.handleChange}
         defaultValue={product?.giatien}
         name="giatien"
+        value={formik?.values?.giatien}
         type="text"
         placeholder="Price"
       />
+      {formik.errors.giatien && formik.touched.giatien && (
+        <p>{formik.errors.giatien}</p>
+      )}
+
       <label>Quantity</label>
       <input
         onChange={formik.handleChange}
+        value={formik?.values?.soluong}
         defaultValue={product?.soluong}
         name="soluong"
         type="text"
         placeholder="Price"
       />
+      {formik.errors.soluong && formik.touched.soluong && (
+        <p>{formik.errors.soluong}</p>
+      )}
+
       <label htmlFor="danhmuc">Category</label>
 
       <select
@@ -115,11 +152,8 @@ const ProductForm = ({ product }) => {
         onChange={(e) => {
           formik.setFieldValue("danhmuc", e.target.value);
         }}>
-        <option value="" disabled>
-          Uncategorized
-        </option>
         {category?.map((item, index) => (
-          <option key={index} value={item.id}>
+          <option key={index} value={item.id || 1}>
             {item.ten}
           </option>
         ))}
