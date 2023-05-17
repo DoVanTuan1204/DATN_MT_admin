@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+container {
+  border: 1px solid black;
+  background: #000;
+}
+
+items {
+  margin-bottom: 1rem;
+}
 img {
   max-height: 100%;
 }

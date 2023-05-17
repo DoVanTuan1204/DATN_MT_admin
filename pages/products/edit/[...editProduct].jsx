@@ -8,18 +8,18 @@ const EditProduct = () => {
   const [detailProduct, setDetailProduct] = useState();
   const router = useRouter();
   const { editProduct } = router.query;
-  const fetchListProduct = async () => {
+  const fetchDetailProduct = async () => {
     const data = await ProductAPI.getDetailProduct(editProduct[0]);
     setDetailProduct(data.data);
   };
 
   // call api
   useEffect(() => {
-    fetchListProduct();
+    fetchDetailProduct();
   }, [editProduct[0]]);
   return (
     <Layout>
-      <h1 className="text-blue-900 text-xl">Add new product</h1>
+      <h1 className="text-blue-900 text-xl">Edit product</h1>
       {detailProduct && <ProductForm product={detailProduct} />}
     </Layout>
   );
