@@ -4,12 +4,15 @@ export const SUPPLIER_ENDPOINT = {
   GET_LIST_SUPPLIER: `${v1}/shop/nha_cung_cap/`,
   CREATE_SUPPLIER: `${v1}/shop/nha_cung_cap/`,
   DELETE_SUPPLIER: (id) => `${v1}/shop/nha_cung_cap/` + id,
+  GET_DETAIL_SUPPLIER: (id) => `${v1}/shop/nha_cung_cap/` + id,
   UPDATE_SUPPLIER: (id) => `${v1}/shop/nha_cung_cap/` + id + "/",
 };
 
 export default class SupplierAPI {
   static getListSupplier = (payload) =>
     appAxios.get(SUPPLIER_ENDPOINT.GET_LIST_SUPPLIER, payload);
+  static getDetailSupplier = (payload) =>
+    appAxios.get(SUPPLIER_ENDPOINT.GET_DETAIL_SUPPLIER(payload), payload);
 
   static deleteSupplier = (payload) =>
     appAxios.delete(SUPPLIER_ENDPOINT.DELETE_SUPPLIER(payload), payload);

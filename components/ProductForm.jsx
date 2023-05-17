@@ -23,18 +23,15 @@ const ProductForm = ({ product }) => {
       mota: product?.mota,
       giatien: product?.giatien,
       soluong: product?.soluong,
-      danhmuc: product?.danhmuc || 1,
+      danhmuc: product?.danhmuc,
     },
     onSubmit: async (values) => {
-      if (images.length == 0) {
-      } else {
-        if (!product) await ProductAPI.createProduct(values);
-        else {
-          values.id = product.id;
-          await ProductAPI.updateProduct(values);
-        }
-        Router.push("/products");
+      if (!product) await ProductAPI.createProduct(values);
+      else {
+        values.id = product.id;
+        await ProductAPI.updateProduct(values);
       }
+      Router.push("/products");
     },
   });
   const uploadImages = async (ev) => {
@@ -113,7 +110,7 @@ const ProductForm = ({ product }) => {
 
       <select
         name="danhmuc"
-        defaultValue={product?.danhmuc || 1}
+        defaultValue={product?.danhmuc}
         id="danhmuc"
         onChange={(e) => {
           formik.setFieldValue("danhmuc", e.target.value);

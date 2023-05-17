@@ -5,37 +5,22 @@ import React, { useEffect, useState } from "react";
 import IconEdit from "@/components/icons/IconEdit";
 import IconTrash from "@/components/icons/IconTrash";
 import ProductAPI from "@/src/api/product";
+import ReactPaginate from "react-paginate";
 
 const Products = () => {
   const [listProduct, setListProduct] = useState([]);
-  const [pageNumber, setPageNumber] = useState([]);
-  const [countPage, setCountPage] = useState();
-  const [paging, setPaging] = useState(1);
+
+  const [pageCount, setPageCount] = useState(0);
+  const [paging, setPaging] = useState();
 
   const fetchListProduct = async () => {
     const data = await ProductAPI.getListProduct({ page: paging });
     setListProduct(data.data.results);
-    if (data.data.count % 10 === 0)
-      setCountPage(Math.floor(data.data.count / 10));
-      else
-      setCountPage(Math.floor(data.data.count / 10) + 1);
-    console.log(data.data);
+    setPageCount(Math.ceil(data.data.count / 10));
   };
   useEffect(() => {
     fetchListProduct();
   }, [paging]);
-
-  useEffect(() => {
-    if (pageNumber.length === 0) {
-      setArrayPage();
-    }
-  }, [listProduct]);
-
-  const setArrayPage = () => {
-    for (let i = 1; i <= countPage; i++) {
-      setPageNumber((oldArray) => [...oldArray, i]);
-    }
-  };
 
   const deleteProduct = async (id) => {
     if (confirm("Delete this product??") === true) {
@@ -45,10 +30,11 @@ const Products = () => {
     } else {
     }
   };
-  const pagination = (number) => {
-    setPaging(number);
-  };
 
+  const handleChangePage = async (data) => {
+    let page = data.selected + 1;
+    setPaging(page);
+  };
   return (
     <Layout>
       <Link
@@ -89,22 +75,21 @@ const Products = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex flex-row gap-2 mt-3">
-        {pageNumber.map((number, index) => (
-          <button
-            key={index}
-            className={
-              number === paging
-                ? "cursor-pointer px-2 py-1 border rounded-lg bg-blue-900 text-white"
-                : "cursor-pointer px-2 py-1 border rounded-lg"
-            }
-            onClick={() => {
-              pagination(number);
-            }}>
-            {number}
-          </button>
-        ))}
-      </div>
+      <ReactPaginate
+        pageCount={pageCount}
+        onPageChange={handleChangePage}
+        previousLabel="< previous"
+        nextLabel="next >"
+        marginPagesDisplayed={2}
+        pageClassName="border px-2 py-1"
+        previousClassName="border px-2 py-1"
+        nextClassName="border px-2 py-1"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        containerClassName="mt-2 flex flex-row gap-2 justify-end items-center"
+        activeClassName="bg-blue-900 text-white"
+        renderOnZeroPageCount={null}
+      />
     </Layout>
   );
 };

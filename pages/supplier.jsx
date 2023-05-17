@@ -1,60 +1,30 @@
 import Layout from "@/components/Layout";
+import SupplierForm from "@/components/SupplierForm";
 import IconEdit from "@/components/icons/IconEdit";
 import IconTrash from "@/components/icons/IconTrash";
 import SupplierAPI from "@/src/api/supplier";
-import { useFormik } from "formik";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
 
 const Categories = () => {
   const [listSupplier, setListSupplier] = useState();
-  const [a, setA] = useState();
-  const [pageNumber, setPageNumber] = useState([]);
-  const [countPage, setCountPage] = useState();
-  const [paging, setPaging] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+  const [paging, setPaging] = useState();
+  const router = useRouter();
 
   const fetchListSupplier = async () => {
     const data = await SupplierAPI.getListSupplier({ page: paging });
+    setPageCount(Math.ceil(data.data.count / 10));
     setListSupplier(data.data.results);
-    if (data.data.count % 10 !== 0)
-      setCountPage(Math.floor(data.data.count / 10) + 1);
-    setA(data.data.count);
   };
 
   useEffect(() => {
     fetchListSupplier();
   }, [paging]);
-  useEffect(() => {
-    if (pageNumber.length === 0) {
-      setArrayPage();
-    }
-  });
-  const setArrayPage = () => {
-    for (let i = 1; i <= countPage; i++) {
-      setPageNumber((oldArray) => [...oldArray, i]);
-    }
-  };
-  const pagination = (number) => {
-    setPaging(number);
-  };
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      diachi: "",
-      sdt: "",
-    },
-    onSubmit: async (values, { resetForm }) => {
-      await SupplierAPI.createSupplier(values);
-      fetchListSupplier();
-      resetForm();
-    },
-  });
 
-  const setValueToInput = (data) => {
-    formik.values.id = data.id;
-    formik.values.name = data.name;
-    formik.values.diachi = data.diachi;
-    formik.values.sdt = data.sdt;
-    console.log(formik.values.id);
+  const getDetailSupplier = async (id) => {
+    router.push("/supplier/edit/" + id);
   };
 
   const deleteSupplier = async (id) => {
@@ -65,40 +35,22 @@ const Categories = () => {
     } else {
     }
   };
+
+  const handleChangePage = async (data) => {
+    let page = data.selected + 1;
+    setPaging(page);
+  };
+
   return (
     <Layout>
       <h1>Supplier</h1>
-      <label htmlFor="">Create new supplier</label>
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          defaultValue={formik.values.name}
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          placeholder="Supplier name"
-        />
-        <input
-          type="text"
-          value={formik.values.diachi}
-          name="diachi"
-          onChange={formik.handleChange}
-          placeholder="Supplier Address"
-        />
-        <input
-          type="text"
-          value={formik.values.sdt}
-          name="sdt"
-          onChange={formik.handleChange}
-          placeholder="Supplier Phone number"
-        />
-        <button
-          className="bg-blue-900 text-white px-4 py-1 rounded-sm shadow-sm"
-          type="submit">
-          Save
-        </button>
-      </form>
-
+      <button
+        onClick={() => {
+          router.push("/supplier/new");
+        }}
+        className="bg-green-700 text-white py-2 px-2 rounded-md mb-3">
+        Add new supplier
+      </button>
       <table className="basic mt-4 overflow-hidden">
         <thead>
           <tr>
@@ -115,7 +67,7 @@ const Categories = () => {
               <td className="">{data.sdt}</td>
               <td className="flex flex-row">
                 <button
-                  onClick={() => setValueToInput(data)}
+                  onClick={() => getDetailSupplier(data.id)}
                   className="bg-blue-900 text-white">
                   <IconEdit />
                   Edit
@@ -133,22 +85,21 @@ const Categories = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex flex-row gap-2 mt-3">
-        {pageNumber.map((number, index) => (
-          <button
-            key={index}
-            className={
-              number === paging
-                ? "cursor-pointer px-2 py-1 border rounded-lg bg-blue-900 text-white"
-                : "cursor-pointer px-2 py-1 border rounded-lg"
-            }
-            onClick={() => {
-              pagination(number);
-            }}>
-            {number}
-          </button>
-        ))}
-      </div>
+      <ReactPaginate
+        pageCount={pageCount}
+        onPageChange={handleChangePage}
+        previousLabel="< previous"
+        nextLabel="next >"
+        marginPagesDisplayed={2}
+        pageClassName="border px-2 py-1"
+        previousClassName="border px-2 py-1"
+        nextClassName="border px-2 py-1"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        containerClassName="mt-2 flex flex-row gap-2 justify-end items-center"
+        activeClassName="bg-blue-900 text-white"
+        renderOnZeroPageCount={null}
+      />
     </Layout>
   );
 };
