@@ -9,13 +9,17 @@ import { useRouter } from "next/router";
 import IconCategories from "./icons/IconCategories";
 import IconLogout from "./icons/IconLogout";
 
-const Nav = () => {
-  const inactiveLink = "flex gap-1";
+const Nav = ({ show }) => {
+  const inactiveLink = " flex gap-1";
   const activeLink = inactiveLink + " bg-white text-blue-900 rounded-lg p-2";
   const router = useRouter();
   const { pathname } = router;
   return (
-    <aside className="text-white p-4 pr-0">
+    <aside
+      className={
+        (show ? " left-0" : " -left-full") +
+        " top-0 text-white p-4 fixed w-full bg-blue-900 h-screen md:static md:w-auto transition-all"
+      }>
       <Link href={"/"} className="flex flex-row gap-2 mb-3 mr-4">
         <IconDashboard />
         <span>Dashboard</span>
