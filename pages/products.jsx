@@ -14,8 +14,12 @@ const Products = () => {
 
   const fetchListProduct = async () => {
     const data = await ProductAPI.getListProduct({ page: paging });
-    setCountPage(Math.floor(data.data.count / 10) + 1);
     setListProduct(data.data.results);
+    if (data.data.count % 10 === 0)
+      setCountPage(Math.floor(data.data.count / 10));
+      else
+      setCountPage(Math.floor(data.data.count / 10) + 1);
+    console.log(data.data);
   };
   useEffect(() => {
     fetchListProduct();
@@ -25,7 +29,7 @@ const Products = () => {
     if (pageNumber.length === 0) {
       setArrayPage();
     }
-  });
+  }, [listProduct]);
 
   const setArrayPage = () => {
     for (let i = 1; i <= countPage; i++) {
@@ -34,16 +38,17 @@ const Products = () => {
   };
 
   const deleteProduct = async (id) => {
-    if (confirm("Delete this product!!") === true) {
+    if (confirm("Delete this product??") === true) {
       await ProductAPI.deleteProduct(id);
       fetchListProduct();
-      alert("OK");
+      alert("Delete success");
     } else {
     }
   };
   const pagination = (number) => {
     setPaging(number);
   };
+
   return (
     <Layout>
       <Link
