@@ -19,7 +19,7 @@ const EditProduct = () => {
   }, [editProduct[0]]);
   return (
     <Layout>
-      <h1 className="text-blue-900 text-xl">Edit product</h1>
+      <h1 className="text-blue-900 text-xl">Chỉnh sửa sản phẩm</h1>
       {detailProduct && <ProductForm product={detailProduct} />}
     </Layout>
   );

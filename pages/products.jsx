@@ -40,14 +40,14 @@ const Products = () => {
       <Link
         className="bg-green-700 text-white py-2 px-2 rounded-md"
         href={"/products/new"}>
-        Add new products
+        Thêm mới sản phẩm
       </Link>
       <table className="basic mt-6">
         <thead>
           <tr>
-            <td>Product name</td>
-            <td>Product price</td>
-            <td>Product in stock</td>
+            <td>Tên sản phẩm</td>
+            <td>Giá sản phẩm</td>
+            <td>Sản phẩm còn lại</td>
             <td></td>
           </tr>
         </thead>
@@ -62,13 +62,13 @@ const Products = () => {
                   className="bg-blue-900 text-white"
                   href={"/products/edit/" + data.id}>
                   <IconEdit />
-                  Edit
+                  Sửa
                 </Link>
                 <button
                   onClick={() => deleteProduct(data.id)}
                   className="bg-blue-900 text-white">
                   <IconTrash />
-                  Delete
+                  Xoá
                 </button>
               </td>
             </tr>

@@ -7,6 +7,7 @@ export const PRODUCT_ENDPOINT = {
   CREATE_PRODUCT: `${v1}/shop/sanpham/`,
   DELETE_PRODUCT: (id) => `${v1}/shop/sanpham/` + id,
   UPDATE_PRODUCT: (id) => `${v1}/shop/sanpham/` + id + "/",
+  UPLOAD_IMAGE: `${v1}/shop/hinh_anh/`,
 };
 
 export default class ProductAPI {
@@ -24,4 +25,7 @@ export default class ProductAPI {
 
   static deleteProduct = (payload) =>
     appAxios.delete(PRODUCT_ENDPOINT.DELETE_PRODUCT(payload), payload);
+
+  static uploadImage = (payload) =>
+    appAxios.post(PRODUCT_ENDPOINT.UPLOAD_IMAGE, payload);
 }

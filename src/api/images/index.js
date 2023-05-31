@@ -6,5 +6,5 @@ export const IMAGES_ENDPOINT = {
 
 export default class ImagesAPI {
   static createImages = (payload) =>
-    appAxios.post(IMAGES_ENDPOINT.CREATE_IMAGES, payload);
+    appAxios.post(IMAGES_ENDPOINT.CREATE_IMAGES(payload), payload);
 }
